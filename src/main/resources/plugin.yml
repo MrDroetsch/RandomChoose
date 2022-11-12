@@ -1,0 +1,11 @@
+name: FMCRandomChoose
+version: '${project.version}'
+main: me.bunnykick.randomchoose.RandomChoose
+api-version: 1.18
+authors: [ BunnyKick ]
+description: Choose a random Player for Stuff
+
+commands:
+  chooserandom:
+    usage: /<command>
+    aliases: [cr]
