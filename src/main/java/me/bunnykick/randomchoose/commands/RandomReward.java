@@ -108,9 +108,11 @@ public class RandomReward implements CommandExecutor, Listener {
             return;
         }
         if(!check(player, RANDOM_REWARD, true)) return;
+        player.sendMessage("§2Verlosung von Items:");
         player.sendMessage("§c/randomreward §7- um die zu verlosenden Items zu setzen");
         player.sendMessage("§c/randomreward choose §7- um die Items unter den Spielern zu verlosen (Ein Gewinner kriegt alles)");
         player.sendMessage("§c/randomreward chooseall §7- ignoriert die bypass-Permission und lost aus alles Spielern einen aus");
+        player.sendMessage("§c/randomreward help §7- zeigt diese Hilfe an");
     }
 
     private boolean hasSlot(Inventory inventory) {

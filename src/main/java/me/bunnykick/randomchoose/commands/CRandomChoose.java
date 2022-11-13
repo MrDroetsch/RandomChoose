@@ -36,6 +36,16 @@ public class CRandomChoose implements CommandExecutor {
                 case 1 -> {
                     if(args[0].equalsIgnoreCase("all")) {
                         playerCommand(player, true, null);
+                    } else if(args[0].equalsIgnoreCase("help")) {
+                        if(checkPermission(player, Permission.CHOOSE_RANDOM)) {
+                            player.sendMessage("§2Einen Random-Spieler auswählen:");
+                            player.sendMessage("§c/chooserandom §7- Wählt einen zufälligen Spieler aus");
+                            player.sendMessage("§c/chooserandom all §7- Wählt einen Spieler aus, bypass wird ignoriert");
+                            player.sendMessage("§c/chooserandom <Liste> §7- Wählt eins der angegebenen Wörter aus");
+                            player.sendMessage("§c/chooserandom help §7- zeigt diese Hilfe an");
+                        } else {
+                            player.sendMessage(configManager.getString(Message.NOPERM).replace("&", "§"));
+                        }
                     } else {
                         player.sendMessage("§2Ergebnis: §c" + args[0]);
                     }
