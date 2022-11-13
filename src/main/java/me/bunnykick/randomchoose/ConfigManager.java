@@ -1,12 +1,14 @@
 package me.bunnykick.randomchoose;
 
-import me.bunnykick.randomchoose.utils.ConfigPaths;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
 import java.io.File;
 import java.io.IOException;
+
+import static me.bunnykick.randomchoose.utils.ConfigPaths.Permission.*;
+import static me.bunnykick.randomchoose.utils.ConfigPaths.Message.*;
 
 public class ConfigManager {
 
@@ -24,8 +26,10 @@ public class ConfigManager {
     private void load() throws IOException, InvalidConfigurationException {
         if(!file.exists()) {
             config.options().copyDefaults(true);
-            config.addDefault(ConfigPaths.Permission.CHOOSE_RANDOM, ConfigPaths.Permission.CHOOSE_RANDOM_DEFAULT);
-            config.addDefault(ConfigPaths.Permission.CHOOSE_RANDOM_BYPASS, ConfigPaths.Permission.CHOOSE_RANDOM_BYPASS_DEFAULT);
+            config.addDefault(CHOOSE_RANDOM, CHOOSE_RANDOM_DEFAULT);
+            config.addDefault(RANDOM_BYPASS, RANDOM_BYPASS_DEFAULT);
+            config.addDefault(RANDOM_REWARD, RANDOM_REWARD_DEFAULT);
+            config.addDefault(NOPERM, "&4Keine Berechtigung");
             save();
         } else {
             config.load(file);

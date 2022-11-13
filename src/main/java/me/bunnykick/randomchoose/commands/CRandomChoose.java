@@ -2,7 +2,6 @@ package me.bunnykick.randomchoose.commands;
 
 import me.bunnykick.randomchoose.ConfigManager;
 import me.bunnykick.randomchoose.RandomChoose;
-import me.bunnykick.randomchoose.utils.ConfigPaths;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -13,6 +12,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import java.util.stream.Collectors;
+
+import static me.bunnykick.randomchoose.utils.ConfigPaths.*;
 
 public class CRandomChoose implements CommandExecutor {
 
@@ -31,15 +32,15 @@ public class CRandomChoose implements CommandExecutor {
         if(sender instanceof Player) {
             Player player = (Player) sender;
             switch(args.length) {
-                case 0 -> playerCommand(player, RandomChoose.USE_DEFAULT, false, null);
+                case 0 -> playerCommand(player, false, null);
                 case 1 -> {
                     if(args[0].equalsIgnoreCase("all")) {
-                        playerCommand(player, RandomChoose.USE_DEFAULT, true, null);
+                        playerCommand(player, true, null);
                     } else {
                         player.sendMessage("§2Ergebnis: §c" + args[0]);
                     }
                 }
-                default -> playerCommand(player, RandomChoose.USE_DEFAULT, false, List.of(args));
+                default -> playerCommand(player, false, List.of(args));
             }
         } else {
             // TODO: Console??
@@ -47,18 +48,18 @@ public class CRandomChoose implements CommandExecutor {
         return true;
     }
 
-    private boolean checkPermission(Player player, boolean def, String configPath) {
-        String permission = ConfigPaths.Permission.getDefault(configPath);
+    private boolean checkPermission(Player player, String configPath) {
+        String permission = Permission.getDefault(configPath);
 
-        if(!def) permission = configManager.getString(configPath);
+        if(!RandomChoose.USE_DEFAULT) permission = configManager.getString(configPath);
 
         return player.hasPermission(permission);
     }
 
-    private void playerCommand(Player player, boolean def, boolean all, List<String> auswahl) {
+    private void playerCommand(Player player, boolean all, List<String> auswahl) {
 
-        if(!checkPermission(player, def, ConfigPaths.Permission.CHOOSE_RANDOM)) {
-            player.sendMessage(configManager.getString(ConfigPaths.Message.NOPERM).replace("&", "§"));
+        if(!checkPermission(player, Permission.CHOOSE_RANDOM)) {
+            player.sendMessage(configManager.getString(Message.NOPERM).replace("&", "§"));
             return;
         }
 
@@ -67,19 +68,25 @@ public class CRandomChoose implements CommandExecutor {
             return;
         }
 
-        String bypass = def ? ConfigPaths.Permission.CHOOSE_RANDOM_BYPASS_DEFAULT : configManager.getString(ConfigPaths.Permission.CHOOSE_RANDOM_BYPASS);
+        String bypass = RandomChoose.USE_DEFAULT ? Permission.RANDOM_BYPASS_DEFAULT : configManager.getString(Permission.RANDOM_BYPASS);
         List<Player> playerList = all ?
                 new ArrayList<>(commands.getPlugin().getServer().getOnlinePlayers()) :
                 commands.getPlugin().getServer().getOnlinePlayers().stream().filter(p -> !p.hasPermission(bypass)).collect(Collectors.toList());
 
-        if(playerList.size() < 1) {
+        Player target = choose(playerList);
+        if(target == null) {
             player.sendMessage("§cError! Keine Spieler zur auswahl");
             return;
         }
-        Player target = playerList.get(random.nextInt(playerList.size()));
-        if(target != null) {
-            player.sendMessage("§2Random-Spieler: §c" + target.getName());
+
+        player.sendMessage("§2Random-Spieler: §c" + target.getName());
+    }
+
+    public <E> E choose(List<E> list) {
+        if(list != null && list.size() > 0) {
+            return list.get(random.nextInt(list.size()));
         }
+        return null;
     }
 
 }

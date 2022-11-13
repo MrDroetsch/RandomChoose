@@ -9,3 +9,6 @@ commands:
   chooserandom:
     usage: /<command>
     aliases: [cr]
+  randomreward:
+    usage: /<command>
+    aliases: [reward]
